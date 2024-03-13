@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropdown Dummy</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
+    .address-bar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #d3d3d3;
+        border-radius: 5px;
+        padding: 10px;
+        width: max-content;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    .folder-icon {
+        font-size: 1.5em;
+        color: #5f6368;
+    }
+    .path {
+        color: #3c4043;
+        font-size: 0.9em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        width: 100%;
+        max-height: 150px;
+        overflow-y: auto;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: none;
+    }
+    .dropdown-item {
+        padding: 10px;
+        cursor: pointer;
+    }
+    .dropdown-item:hover {
+        background-color: #f2f2f2;
+    }
+    .dropdown-item.active {
+        background-color: #e9ecef;
+    }
+</style>
+</head>
+<body>
+    <div class="address-bar">
+        <i class="fas fa-folder folder-icon"></i>
+        <span class="path">My Drive > Folder Name > Subfolder</span>
+        <i class="fas fa-caret-down" id="dropdown-trigger"></i>
+        <div class="dropdown" id="dropdown">
+            <a href="#"><div class="dropdown-item">Option 1</div></a>
+            <a href="#"><div class="dropdown-item">Option 2</div></a>
+            <a href="#"><div class="dropdown-item">Option 3</div></a>
+        </div>
+    </div>
+
+    <script>
+        var dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                dropdownItems.forEach(function(innerItem) {
+                    innerItem.classList.remove('active');
+                });
+                item.classList.add('active');
+            });
+        });
+
+        document.getElementById('dropdown-trigger').addEventListener('click', function() {
+            var dropdown = document.getElementById('dropdown');
+            if (dropdown.style.display === 'none') {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

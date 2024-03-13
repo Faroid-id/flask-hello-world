@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files in Google Drive Folder</title>
+    <!-- Materialize CSS CDN -->
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/> -->
+    <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+          <a href="/" class="brand-logo"><img src="{{ url_for('static', filename='img/utm.png') }}" id="logokecil" alt="Logo"></a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="folder">Semua Data</a></li>
+            <li><a href="cari">Pencarian</a></li>
+            <li><a href="logout">Logout</a></li>
+          </ul>
+        </div>
+      </nav>
+    <div id="maincontent">
+        <div class="container">
+            <h1 class="center-align">Files in Google Drive Folder</h1>
+            <ul class="collection">
+                {% for file_name, file_id, mime_type, item_type in files %}
+                    <li class="collection-item">
+                        {% if mime_type == 'application/vnd.google-apps.folder' %}
+                            <i class="far fa-folder"></i>&nbsp;&nbsp;
+                        {% elif mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
+                            <i class="far fa-file-word"></i>&nbsp;&nbsp;
+                        {% elif mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
+                            <i class="far fa-file-excel"></i>&nbsp;&nbsp;
+                        {% elif mime_type == 'application/pdf' %}
+                            <i class="far fa-file-pdf"></i>&nbsp;&nbsp;
+                        {% elif mime_type == 'image/jpeg' or mime_type == 'image/jpg' or mime_type == 'image/png' %}
+                            <i class="far fa-image"></i>&nbsp;&nbsp;
+                        {% else %}
+                            <i class="far fa-file"></i>&nbsp;&nbsp;
+                        {% endif %}
+                        <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="container">
+          <div class="row">
+            <div class="col l6 s12">
+              <h5 class="white-text">Tentang Kami</h5>
+              <p class="grey-text text-lighten-4">
+                Ini adalah contoh footer minimalis dengan MaterializeCSS.
+              </p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+              <h5 class="white-text">Kontak</h5>
+              <ul>
+                <li>
+                  <a class="grey-text text-lighten-3" href="#!">Email</a>
+                </li>
+                <li>
+                  <a class="grey-text text-lighten-3" href="#!">Telepon</a>
+                </li>
+                <li>
+                  <a class="grey-text text-lighten-3" href="#!">Alamat</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          <div class="container">
+            © 2023 Copyright Text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+          </div>
+        </div>
+      </footer>
+  
+    <!-- Materialize JavaScript CDN -->
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+
+</body>
+</html>
