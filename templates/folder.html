@@ -79,7 +79,11 @@
                         {% else %}
                             <i class="far fa-file"></i>&nbsp;&nbsp;
                         {% endif %}
+                        {% if mime_type == 'application/vnd.google-apps.folder' %}
+                        <a href="/folder?id={{file_id}}">{{ file_name }}</a>
+                        {% else %}
                         <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

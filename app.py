@@ -88,7 +88,6 @@ def cari():
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']
-
     # Mendapatkan kredensial
     credentials = get_credentials()
 
@@ -129,6 +128,10 @@ def folder():
     # Membangun objek Drive API
     service = build('drive', 'v3', credentials=creds)
     # Mengambil daftar file dalam folder
+    if request.args.get('id')!=None:
+        FOLDER_ID=request.args.get('id')
+    else:
+        FOLDER_ID='1RxNuk2KXOGTleBP-93bQKue0DND-6NnE'
     results = service.files().list(q=f"'{FOLDER_ID}' in parents",
                                     fields="nextPageToken, files(id, name, mimeType, shortcutDetails)").execute()
     items = results.get('files', [])
@@ -145,7 +148,7 @@ def folder():
                 files.append((item['name'], target_id, target_type, 'shortcut'))
             else:
                 files.append((item['name'], item['id'], item['mimeType'], 'file'))
-    return render_template('hasil2.html', files=files)
+    return render_template('folder.html', files=files)
 
 
 
@@ -179,5 +182,7 @@ def address():
     return render_template('addressbar.html')
 
 
+#if __name__ == '__main__':
+#    app.run(debug=True)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host= '0.0.0.0', port=5000, debug=True)
