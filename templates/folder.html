@@ -60,31 +60,58 @@
             <h1 class="center-align">Files in Google Drive Folder</h1>
             <div class="address-bar">
               <i class="fas fa-folder folder-icon"></i>
-              <span class="path"><a href="#"> Drive</a> > <a href="#">Folder Name</a> > <a href="#">Subfolder</a></span>
+              <span class="path">
+                  {% for parent_folder_id, parent_folder_name in folder_path[::-1] %}
+                      > <a href="/folder?id={{parent_folder_id}}">{{ parent_folder_name }}</a>
+                  {% endfor %}
+              </span>
               <i class="fas fa-caret-down"></i>
           </div>
+          
             <ul class="collection">
-                {% for file_name, file_id, mime_type, item_type in files %}
-                    <li class="collection-item">
-                        {% if mime_type == 'application/vnd.google-apps.folder' %}
-                            <i class="far fa-folder"></i>&nbsp;&nbsp;
-                        {% elif mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
-                            <i class="far fa-file-word"></i>&nbsp;&nbsp;
+              {% for file_name, file_id, mime_type, item_type in files %}
+              {% if mime_type == 'application/vnd.google-apps.folder' %}
+                  <li class="collection-item">
+                          <i class="far fa-folder"></i>&nbsp;&nbsp;
+                          <a href="/folder?id={{file_id}}">{{ file_name }}</a>
+              {% endif %}
+                  </li>
+              {% endfor %}
+              {% for file_name, file_id, mime_type, item_type in files %}
+                        {% if mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
+              <li class="collection-item">
+                            
+                        <i class="far fa-file-word"></i>&nbsp;&nbsp;
+                            <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                          </li>
                         {% elif mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
-                            <i class="far fa-file-excel"></i>&nbsp;&nbsp;
+              <li class="collection-item">
+                            
+                        <i class="far fa-file-excel"></i>&nbsp;&nbsp;
+                            <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                          </li>
                         {% elif mime_type == 'application/pdf' %}
-                            <i class="far fa-file-pdf"></i>&nbsp;&nbsp;
+              <li class="collection-item">
+                            
+                        <i class="far fa-file-pdf"></i>&nbsp;&nbsp;
+                            <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                          </li>
                         {% elif mime_type == 'image/jpeg' or mime_type == 'image/jpg' or mime_type == 'image/png' %}
-                            <i class="far fa-image"></i>&nbsp;&nbsp;
+              <li class="collection-item">
+                            
+                        <i class="far fa-image"></i>&nbsp;&nbsp;
+                            <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                          </li>
                         {% else %}
-                            <i class="far fa-file"></i>&nbsp;&nbsp;
+                        {% if mime_type != 'application/vnd.google-apps.folder' %}
+              <li class="collection-item">
+
+                        <i class="far fa-file"></i>&nbsp;&nbsp;
+                            <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
+                          </li>
                         {% endif %}
-                        {% if mime_type == 'application/vnd.google-apps.folder' %}
-                        <a href="/folder?id={{file_id}}">{{ file_name }}</a>
-                        {% else %}
-                        <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
                         {% endif %}
-                    </li>
+
                 {% endfor %}
             </ul>
         </div>

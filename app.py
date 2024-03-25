@@ -31,7 +31,7 @@ def check_logged_in():
 # Nama file untuk menyimpan token akses
 TOKEN_FILENAME = 'token.json'
 
-FOLDER_ID = '1RxNuk2KXOGTleBP-93bQKue0DND-6NnE'
+FOLDER_ID = '1JDzLrwuXm6-kw0EV5en1FEAD9E60rheI'
 
 # Fungsi untuk mendapatkan kredensial
 def get_credentials():
@@ -84,6 +84,14 @@ def index():
 def cari():
     return render_template('cari.html')
 
+def get_file_type(mime_type):
+    if mime_type == 'application/vnd.google-apps.folder':
+        return 'folder'
+    elif mime_type == 'application/vnd.google-apps.shortcut':
+        return 'shortcut'
+    else:
+        return 'file'
+
 # Route untuk menangani pencarian dan menampilkan file PDF
 @app.route('/search', methods=['POST'])
 def search():
@@ -96,7 +104,7 @@ def search():
 
     # Mencari file berdasarkan nama
     found_files = search_files(drive_service, query)
-    tuples_data = [(item['name'], item['id']) for item in found_files]
+    tuples_data = [(item['name'], item['id'], item['mimeType'], get_file_type(item['mimeType'])) for item in found_files]
 
 
     if found_files and len(found_files) >= 1:
@@ -127,12 +135,30 @@ def folder():
     creds = get_credentials()
     # Membangun objek Drive API
     service = build('drive', 'v3', credentials=creds)
+    
+    # Fungsi rekursif untuk mendapatkan semua parent folder dari suatu file atau folder
+    def get_folders_path(file_id):
+        folders_path = []
+        while True:
+            file_info = service.files().get(fileId=file_id, fields='id, name, parents').execute()
+            folder_name = file_info.get('name')
+            if folder_name:
+                folders_path.append((file_info['id'], folder_name))
+                parent_id = file_info.get('parents', [])
+                if parent_id:
+                    file_id = parent_id[0]
+                else:
+                    break
+            else:
+                break
+        return folders_path
+    
     # Mengambil daftar file dalam folder
-    if request.args.get('id')!=None:
-        FOLDER_ID=request.args.get('id')
+    if request.args.get('id') is not None:
+        folder_id = request.args.get('id')
     else:
-        FOLDER_ID='1RxNuk2KXOGTleBP-93bQKue0DND-6NnE'
-    results = service.files().list(q=f"'{FOLDER_ID}' in parents",
+        folder_id = '1JDzLrwuXm6-kw0EV5en1FEAD9E60rheI'
+    results = service.files().list(q=f"'{folder_id}' in parents",
                                     fields="nextPageToken, files(id, name, mimeType, shortcutDetails)").execute()
     items = results.get('files', [])
     files = []
@@ -148,10 +174,14 @@ def folder():
                 files.append((item['name'], target_id, target_type, 'shortcut'))
             else:
                 files.append((item['name'], item['id'], item['mimeType'], 'file'))
-    return render_template('folder.html', files=files)
-
-
-
+    
+    # Mendapatkan parent folder dari folder saat ini
+    folder_path = get_folders_path(folder_id)
+    
+    # Mengurutkan files secara alfabetis berdasarkan nama file
+    sorted_files = sorted(files, key=lambda x: x[0].lower())
+    
+    return render_template('folder.html', files=sorted_files, folder_path=folder_path)
 
 
 @app.route('/login', methods=['GET', 'POST'])
