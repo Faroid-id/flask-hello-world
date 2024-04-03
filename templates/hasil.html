@@ -38,13 +38,13 @@
                   </li>
               {% endfor %}
               {% for file_name, file_id, mime_type, item_type in files %}
-                        {% if mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
+                        {% if mime_type=='application/msword' or mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
               <li class="collection-item">
                             
                         <i class="far fa-file-word"></i>&nbsp;&nbsp;
                             <a href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank">{{ file_name }}</a>
                           </li>
-                        {% elif mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
+                        {% elif mime_type=='application/vnd.ms-excel' or mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
               <li class="collection-item">
                             
                         <i class="far fa-file-excel"></i>&nbsp;&nbsp;

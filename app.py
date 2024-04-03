@@ -60,12 +60,19 @@ def get_credentials():
 
     return creds
 
-# Fungsi untuk mencari file di Google Drive berdasarkan nama
 def search_files(drive_service, query):
-    results = drive_service.files().list(q=f"name contains '{query}'").execute()
+    # Memisahkan kata-kata dari input
+    keywords = query.split()
+
+    # Membentuk query dengan menggunakan 'and' antara setiap kata
+    query_string = " and ".join([f"name contains '{keyword}'" for keyword in keywords])
+
+    # Menjalankan query
+    results = drive_service.files().list(q=query_string).execute()
     files = results.get('files', [])
 
     return files
+
 
 # Fungsi untuk mengunduh file PDF dari Google Drive
 def download_file(drive_service, file_id, destination):
