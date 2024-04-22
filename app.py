@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -132,7 +132,9 @@ def view_file(file_id):
     # Mendapatkan file berdasarkan ID
     file_info = drive_service.files().get(fileId=file_id).execute()
 
-    pdf_url = f"https://drive.google.com/file/d/{file_info['id']}/preview"
+    # pdf_url = f"https://drive.google.com/file/d/{file_info['id']}/preview"
+    pdf_url = f"https://docs.google.com/spreadsheets/d/{file_info['id']}/edit?embedded=true"
+    
 
     return render_template('result.html', pdf_path=pdf_url)
 
@@ -217,6 +219,30 @@ def logout():
 @app.route('/addressbar')
 def address():
     return render_template('addressbar.html')
+
+@app.route('/led')
+def led():
+    return render_template('tesled.htm')
+
+@app.route('/lkps/<file_id>')
+def lkps_file(file_id):
+    # Mendapatkan kredensial
+    credentials = get_credentials()
+
+    # Membuat objek service Google Drive
+    drive_service = build('drive', 'v3', credentials=credentials)
+
+    # Mendapatkan file berdasarkan ID
+    file_info = drive_service.files().get(fileId=file_id).execute()
+
+    # pdf_url = f"https://drive.google.com/file/d/{file_info['id']}/preview"
+    pdf_url = f"https://docs.google.com/spreadsheets/d/{file_info['id']}/preview"
+    
+
+    return render_template('result.html', pdf_path=pdf_url)
+
+
+
 
 
 #if __name__ == '__main__':

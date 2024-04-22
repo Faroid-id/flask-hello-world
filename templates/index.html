@@ -8,64 +8,79 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <style>
+        /* Additional CSS for responsiveness */
+        #logokecil {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <nav>
         <div class="nav-wrapper">
           <a href="/" class="brand-logo"><img src="{{ url_for('static', filename='img/utm.png') }}" id="logokecil" alt="Logo"></a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="folder">Semua Data</a></li>
-            <li><a href="cari">Pencarian</a></li>
+            <!-- <li><a href="folder">Semua Data</a></li>
+            <li><a href="cari">Pencarian</a></li> -->
+            <li><a href="led">LED</a></li>
+            <li><a href="lkps/1hcGw3CdiyriRIckLBy6dQYpQA8ackvRe">LKPS</a></li>
+            <li><a href="folder">Pencarian</a></li>
             <li><a href="logout">Logout</a></li>
           </ul>
         </div>
-      </nav>
-    <div id="maincontent">
-        <div class="container">
-            <h1 class="center-align">Selamat Datang!</h1>
-            <p class="center-align flow-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, unde amet. Iure ab error recusandae vel repellat minima at corrupti, alias explicabo. Non autem necessitatibus iure enim fugiat animi id..</p>
-        </div>
+    </nav>
+
+    <!-- Mobile Sidenav -->
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="folder">Semua Data</a></li>
+        <li><a href="cari">Pencarian</a></li>
+        <li><a href="logout">Logout</a></li>
+    </ul>
+
+    <div id="maincontent" class="container">
+        <h1 class="center-align">Selamat Datang!</h1>
+        <p class="center-align flow-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, unde amet. Iure ab error recusandae vel repellat minima at corrupti, alias explicabo. Non autem necessitatibus iure enim fugiat animi id..</p>
     </div>
+
     <footer class="page-footer">
         <div class="container">
-          <div class="row">
-            <div class="col l6 s12">
-              <h5 class="white-text">Tentang Kami</h5>
-              <p class="grey-text text-lighten-4">
-                Ini adalah contoh footer minimalis dengan MaterializeCSS.
-              </p>
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <h5 class="white-text">Tentang Kami</h5>
+                    <p class="grey-text text-lighten-4">
+                        Ini adalah contoh footer minimalis dengan MaterializeCSS.
+                    </p>
+                </div>
+                <div class="col s12 m6 l6">
+                    <h5 class="white-text">Kontak</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Email</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Telepon</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Alamat</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="col l4 offset-l2 s12">
-              <h5 class="white-text">Kontak</h5>
-              <ul>
-                <li>
-                  <a class="grey-text text-lighten-3" href="#!">Email</a>
-                </li>
-                <li>
-                  <a class="grey-text text-lighten-3" href="#!">Telepon</a>
-                </li>
-                <li>
-                  <a class="grey-text text-lighten-3" href="#!">Alamat</a>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
         <div class="footer-copyright">
-          <div class="container">
-            © 2023 Copyright Text
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-          </div>
+            <div class="container">
+                © 2023 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
         </div>
-      </footer>
+    </footer>
   
     <!-- Materialize JavaScript CDN -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
 
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
-
+    <script>
+        // Initialize sidenav
+        $(document).ready(function(){
+            $('.sidenav').sidenav();
+        });
+    </script>
 </body>
 </html>

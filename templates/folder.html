@@ -48,8 +48,9 @@
         <div class="nav-wrapper">
           <a href="/" class="brand-logo"><img src="{{ url_for('static', filename='img/utm.png') }}" id="logokecil" alt="Logo"></a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="folder">Semua Data</a></li>
-            <li><a href="cari">Pencarian</a></li>
+            <li><a href="led">LED</a></li>
+            <li><a href="lkps/1hcGw3CdiyriRIckLBy6dQYpQA8ackvRe">LKPS</a></li>
+            <li><a href="folder">Pencarian</a></li>
             <li><a href="logout">Logout</a></li>
           </ul>
         </div>
@@ -58,6 +59,18 @@
       
         <div class="container">
             <h1 class="center-align">Files in Google Drive Folder</h1>
+            <form action="/search" method="post">
+              <div class="row">
+                <div class="input-field col s11">
+                  <input type="text" id="query" name="query" class="validate">
+                  <label for="query">Cari Dokumen</label>
+                </div>
+                <div class="input-field col s1">
+                  <button class="btn waves-effect waves-light right" type="submit">Cari</button>
+                </div>
+              </div>
+            </form>
+            
             <div class="address-bar">
               <i class="fas fa-folder folder-icon"></i>
               <span class="path">
