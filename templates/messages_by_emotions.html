@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages by Emotions</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .column {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Messages by Emotions</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <h4 class="text-center">😊 Senang</h4>
+                <ul id="happyMessages" class="list-group column">
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4 class="text-center">😢 Sedih</h4>
+                <ul id="sadMessages" class="list-group column">
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4 class="text-center">😕 Bingung</h4>
+                <ul id="confusedMessages" class="list-group column">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var socket = io();
+
+            function loadMessages() {
+                $.get('/messages', function(data) {
+                    $('#happyMessages').empty();
+                    $('#sadMessages').empty();
+                    $('#confusedMessages').empty();
+                    data.forEach(function(message) {
+                        if (message[0].includes('😊')) {
+                            $('#happyMessages').append('<li class="list-group-item"><strong>' + message[1] + ':</strong> ' + message[0] + '</li>');
+                        } else if (message[0].includes('😢')) {
+                            $('#sadMessages').append('<li class="list-group-item"><strong>' + message[1] + ':</strong> ' + message[0] + '</li>');
+                        } else if (message[0].includes('😕')) {
+                            $('#confusedMessages').append('<li class="list-group-item"><strong>' + message[1] + ':</strong> ' + message[0] + '</li>');
+                        }
+                    });
+                });
+            }
+
+            socket.on('receive_message', function(data) {
+                if (data.message.includes('😊')) {
+                    $('#happyMessages').append('<li class="list-group-item"><strong>' + data.category + ':</strong> ' + data.message + '</li>');
+                } else if (data.message.includes('😢')) {
+                    $('#sadMessages').append('<li class="list-group-item"><strong>' + data.category + ':</strong> ' + data.message + '</li>');
+                } else if (data.message.includes('😕')) {
+                    $('#confusedMessages').append('<li class="list-group-item"><strong>' + data.category + ':</strong> ' + data.message + '</li>');
+                }
+            });
+
+            loadMessages();
+        });
+    </script>
+</body>
+</html>
