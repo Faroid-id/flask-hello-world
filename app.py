@@ -1,23 +1,30 @@
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 from flask_socketio import SocketIO, emit
-import sqlite3
-import os
+import mysql.connector
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-DATABASE = 'messages.db'
+# MySQL database configuration
+DB_CONFIG = {
+    'host': '89.213.211.250',
+    'user': 'wargalab_admin',
+    'password': 'P4sswordsql',
+    'database': 'wargalab_cm'
+}
 
 def init_db():
-    if not os.path.exists(DATABASE):
-        with sqlite3.connect(DATABASE) as conn:
-            cursor = conn.cursor()
-            cursor.execute('''CREATE TABLE IF NOT EXISTS messages (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                content TEXT NOT NULL, 
-                                category TEXT NOT NULL)''')
-            conn.commit()
+    # Connect to the MySQL server and create the table if it doesn't exist
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS messages (
+                        id INT AUTO_INCREMENT PRIMARY KEY, 
+                        content TEXT NOT NULL, 
+                        category VARCHAR(255) NOT NULL)''')
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -28,18 +35,25 @@ def index():
 def handle_send_message(json):
     message = json['message']
     category = json['category']
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO messages (content, category) VALUES (?, ?)', (message, category))
-        conn.commit()
+    
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO messages (content, category) VALUES (%s, %s)', (message, category))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
     emit('receive_message', {'message': message, 'category': category}, broadcast=True)
 
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('SELECT content, category FROM messages')
-        messages = cursor.fetchall()
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute('SELECT content, category FROM messages')
+    messages = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
     return jsonify(messages)
 
 @app.route('/responses', methods=['GET'])
